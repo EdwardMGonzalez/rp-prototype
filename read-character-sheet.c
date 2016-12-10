@@ -1,12 +1,13 @@
 #include "character.h"
 #include <ctype.h>
 
-char           *get_character_name (FILE * fp);
-int		get_character_hp (FILE * fp);
+char           *getCharacterName (FILE * fp);
+int		getCharacterHp (FILE * fp);
+int		getCharacterMaxHp (FILE * fp);
 
 
 int
-read_character_sheet (char *filepath, struct character *character)
+readCharacterSheet (char *filepath, struct character *character)
 {
 	FILE           *fp;
 	int		retval = 1;
@@ -16,9 +17,10 @@ read_character_sheet (char *filepath, struct character *character)
 		retval = 0;
 
 	/* Fill character struct */
-	if ((character->name = get_character_name (fp)) == NULL)
+	if ((character->name = getCharacterName (fp)) == NULL)
 		retval = 0;
-	character->hp = get_character_hp (fp);
+	character->hp = getCharacterHp (fp);
+	character->maxhp = getCharacterMaxHp (fp);
 
 	fclose (fp);
 	return retval;
@@ -30,7 +32,7 @@ struct lineinfo {
 };
 
 struct lineinfo
-seek_to_line_starting_with (char *prefix, FILE * fp)
+seekToLineStartingWith (char *prefix, FILE * fp)
 {
 	char           *line = NULL;
 	size_t		buflen = 0;
@@ -57,21 +59,21 @@ seek_to_line_starting_with (char *prefix, FILE * fp)
 
 
 char           *
-get_character_name (FILE * fp)
+getCharacterName (FILE * fp)
 {
 	struct lineinfo	lineinfo;
 	char           *name = NULL;
 	int		i = 0,	j = 0;
 	char		prefix    [3] = "# \0";
 	/* find name line */
-	lineinfo = seek_to_line_starting_with (prefix, fp);
+	lineinfo = seekToLineStartingWith (prefix, fp);
 
 	if (lineinfo.len > 0) {
 		/* make space for name */
 		name = calloc (lineinfo.len, sizeof (char));
 		/* start copy after prefix */
 		for (i = strlen (prefix); i < lineinfo.len; i++) {
-                        /* ignore non-printing characters */
+			/* ignore non-printing characters */
 			if (isprint (lineinfo.text[i])) {
 				name[j] = lineinfo.text[i];
 				j++;
@@ -84,21 +86,46 @@ get_character_name (FILE * fp)
 	return name;
 }
 
-
 int
-get_character_hp (FILE * fp)
+seekToLineAndReturnIntValue (FILE * fp, char *prefix)
 {
 	struct lineinfo	lineinfo;
-	int		hp = 0;
-	char		prefix    [5] = "HP: \0";
-	/* seek to hp line */
-	lineinfo = seek_to_line_starting_with (prefix, fp);
-
+	int		value = 0;
+	int		prefixlen;
+	prefixlen = strlen (prefix);
+	/* seek to line */
+	lineinfo = seekToLineStartingWith (prefix, fp);
 	/* if we found the line */
 	if (lineinfo.len > 0) {
-		sscanf (lineinfo.text, "HP: %d", &hp);
-		/* text was allocated in seek_to_line_starting_with's getline */
+		value = getIntValue (prefix, lineinfo.text);
 		free (lineinfo.text);
 	}
-	return hp;
+	return value;
+}
+
+
+int
+getCharacterHp (FILE * fp)
+{
+	return seekToLineAndReturnIntValue (fp, "HP:");
+}
+
+int
+getCharacterMaxHp (FILE * fp)
+{
+	return seekToLineAndReturnIntValue (fp, "MAXHP:");
+}
+
+int
+getIntValue (char *prefix, char *line)
+{
+	int		value = 0;
+	char           *intstr = " %d";
+	char           *format = calloc (strlen (prefix) + strlen (intstr), sizeof (char));
+	format[0] = '\0';	/* make format string appear 0 length */
+	strcat (format, prefix);/* format = prefix */
+	strcat (format, intstr);/* format = prefix + valuestr */
+	sscanf (line, format, &value);	/* pull value */
+	free (format);		/* release memory */
+	return value;
 }

@@ -1,4 +1,5 @@
 # Vaughn Dacey Walker  
 
 ## Physical Traits
-HP: 230
+MAXHP: 230
+HP: 200

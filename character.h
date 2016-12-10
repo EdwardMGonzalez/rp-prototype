@@ -10,8 +10,15 @@
 struct character {
   char *name;
   int hp;
+  int maxhp;
 };
 
-int read_character_sheet(char *filepath, struct character *character);
+/* read-character-sheet */
+int readCharacterSheet(char *filepath, struct character *character);
+int getIntValue(char *prefix, char* line);
+
+/* character-command */
+typedef void (*characterCommand) (struct character*, char* line);
+characterCommand commandFactory(char *line);
 
 #endif

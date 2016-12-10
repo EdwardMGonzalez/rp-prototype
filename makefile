@@ -12,8 +12,8 @@ INDENT = indent -bap -lp -pcs -sob -bad -bbb
 
 default: load-character
 
-load-character: main.o character.h read-character-sheet.o
-	$(CC) $(CFLAGS) -o load-character main.o read-character-sheet.o
+load-character: main.o character.h read-character-sheet.o character-command.o
+	$(CC) $(CFLAGS) -o load-character main.o read-character-sheet.o character-command.o
 
 main.o: main.c
 	$(CC) $(CFLAGS) -c main.c
@@ -21,12 +21,15 @@ main.o: main.c
 read-character-sheet.o: read-character-sheet.c character.h
 	$(CC) $(CFLAGS) -c read-character-sheet.c
 
+character-command.o: character-command.c character.h
+	$(CC) $(CFLAGS) -c character-command.c
+
 test: load-character characters/vaughn-dacey-walker.md
 	clear
 	./load-character ./characters/vaughn-dacey-walker.md
 
 clean:
-	[ -e main.o ] && rm main.o
-	[ -e read-character-sheet.o ] && rm read-character-sheet.o
+	ls *.o && rm *.o || true
 	$(INDENT) main.c
 	$(INDENT) read-character-sheet.c
+	$(INDENT) character-command.c

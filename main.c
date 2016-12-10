@@ -1,6 +1,6 @@
 #include "character.h"
 
-void		enter_loop ();
+void		enterLoop (struct character *character);
 
 int
 main (int argc, char *argv[])
@@ -19,10 +19,10 @@ main (int argc, char *argv[])
 		filepath = calloc (strlen (argv[1]), sizeof (char) + 1);
 		assert (NULL != filepath);
 		strcpy (filepath, argv[1]);
-		if (0 == read_character_sheet (filepath, character))
+		if (0 == readCharacterSheet (filepath, character))
 			printf ("Sorry, I could't load the character sheet.");
 		else
-			enter_loop (character);
+			enterLoop (character);
 		free (filepath);
 	}
 
@@ -30,15 +30,16 @@ main (int argc, char *argv[])
 }
 
 void
-enter_loop (struct character *character)
+enterLoop (struct character *character)
 {
 	char           *line = NULL;
 	size_t		linecap = 0;
 	ssize_t		linelen;
-        printf ("%s loaded.\n", character->name);
-
+	characterCommand command;
+	printf ("%s loaded.\n", character->name);
 	while ((linelen = getline (&line, &linecap, stdin)) > 0) {
-                if(0 == strncmp("hp", line, 2)) printf("hp: %d\n", character->hp);
+		command = commandFactory (line);
+		command (character, line);
 	}
 
 	free (line);		/* preven memory leak */
