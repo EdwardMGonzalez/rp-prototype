@@ -1,9 +1,19 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "character.h"
 
-int read_character_sheet() {
-  printf("reading...");
+FILE *fp;
+int retval = 1;
+char c = EOF;
 
-  return 1;
+int read_character_sheet(char *filepath, struct character *character) {
+  printf("Reading %s...\n", filepath);
+
+  if((fp = fopen(filepath, "r")) == NULL) retval = 0;
+
+  while ((c = getc(fp)) != EOF)
+  {
+    printf("%c", c);
+  }
+
+  fclose(fp);
+  return retval;
 }
