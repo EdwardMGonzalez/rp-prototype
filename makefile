@@ -8,7 +8,7 @@ CC = gcc
 # -Werror :make warnings errors, because I like pain
 CFLAGS = -Wall -g -std=c89 -pedantic -Werror
 
-INDENT = indent -bap -lp -pcs -sob -bad -bbb
+INDENT = indent -bap -lp -pcs -sob -bad -bbb -v
 
 default: load-character
 
@@ -30,6 +30,4 @@ test: load-character characters/vaughn-dacey-walker.md
 
 clean:
 	ls *.o && rm *.o || true
-	$(INDENT) main.c
-	$(INDENT) read-character-sheet.c
-	$(INDENT) character-command.c
+	for f in *.c; do $(INDENT) $$f; done;
