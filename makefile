@@ -21,7 +21,12 @@ main.o: main.c
 read-character-sheet.o: read-character-sheet.c character.h
 	$(CC) $(CFLAGS) -c read-character-sheet.c
 
+test: load-character characters/vaughn-dacey-walker.md
+	clear
+	./load-character ./characters/vaughn-dacey-walker.md
+
 clean:
-	rm *.o load-character
+	[ -e main.o ] && rm main.o
+	[ -e read-character-sheet.o ] && rm read-character-sheet.o
 	$(INDENT) main.c
 	$(INDENT) read-character-sheet.c
