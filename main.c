@@ -38,12 +38,14 @@ enterLoop (struct character *character)
 	ssize_t		linelen;
 	characterCommand command;
 	/* Report character sheet is loaded */
-	printf ("%s loaded.\n", character->name);
+	printf ("\n%s loaded.\n", character->name);
+        printf ("\n> ");
 
 	/* main command loop */
 	while ((linelen = getline (&line, &linecap, stdin)) > 0) {
 		command = commandFactory (line);
 		command (character, line);
+                printf ("\n> ");
 	}
 
 	free (line);		/* preven memory leak */

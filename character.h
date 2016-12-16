@@ -9,8 +9,11 @@
 
 struct character {
   char *name;
-  int hp;
-  int maxhp;
+  int hp; /* current hp */
+  int maxhp; /* max hp */
+  int strength, dexterity, constitution,
+  intelligence, wisdom, charisma; /* attriutes */
+
 };
 
 

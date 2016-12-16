@@ -2,9 +2,7 @@
 #include <ctype.h>
 
 char           *getCharacterName (FILE * fp);
-int		getCharacterHp (FILE * fp);
-int		getCharacterMaxHp (FILE * fp);
-
+int seekToLineAndReturnIntValue (FILE * fp, char *prefix);
 
 int
 readCharacterSheet (char *filepath, struct character *character)
@@ -19,8 +17,14 @@ readCharacterSheet (char *filepath, struct character *character)
 	/* Fill character struct */
 	if ((character->name = getCharacterName (fp)) == NULL)
 		retval = 0;
-	character->hp = getCharacterHp (fp);
-	character->maxhp = getCharacterMaxHp (fp);
+	character->hp = seekToLineAndReturnIntValue(fp, "HP:");
+	character->maxhp = seekToLineAndReturnIntValue(fp, "MAXHP:");
+	character->strength =seekToLineAndReturnIntValue(fp, "Strength:");
+        character->dexterity = seekToLineAndReturnIntValue(fp, "Dexterity:");
+	character->constitution = seekToLineAndReturnIntValue(fp, "Constitution:");
+        character->intelligence = seekToLineAndReturnIntValue(fp, "Intelligence:");
+        character->wisdom = seekToLineAndReturnIntValue(fp, "Wisdom:");
+        character->charisma = seekToLineAndReturnIntValue(fp, "Charisma:");
 
 	fclose (fp);
 	return retval;
@@ -103,18 +107,6 @@ seekToLineAndReturnIntValue (FILE * fp, char *prefix)
 	return value;
 }
 
-
-int
-getCharacterHp (FILE * fp)
-{
-	return seekToLineAndReturnIntValue (fp, "HP:");
-}
-
-int
-getCharacterMaxHp (FILE * fp)
-{
-	return seekToLineAndReturnIntValue (fp, "MAXHP:");
-}
 
 int
 getIntValue (char *prefix, char *line)

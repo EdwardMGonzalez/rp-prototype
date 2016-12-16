@@ -4,15 +4,40 @@
 #include "character-command.h"
 
 
-#define NUMCOMMANDS  5
+#define NUMCOMMANDS  17
 
 namedCommand	COMMANDS[NUMCOMMANDS] = {
 	{"dmg", dmg},
 	{"heal", heal},
 	{"hp", hp},
 	{"maxhp", maxhp},
-	{"quit", quit}
+	{"quit", quit},
+	{"strength", strength},
+	{"str", strength},
+        {"dexterity", dexterity},
+        {"dex", dexterity},
+	{"constitution", constitution},
+	{"con", constitution},
+        {"intelligence", intelligence},
+        {"int", intelligence},
+        {"wisdom", wisdom},
+        {"wis", wisdom},
+        {"charaisma", charisma},
+        {"cha", charisma}
 };
+
+void
+bonus (int score)
+{
+	int		bonus = 0;
+	if (10 <= score) {
+		bonus = (score - 10) / 2;
+	} else {
+		bonus = (score - 11) / 2;
+	}
+
+	printf ("Bonus: %d\n", bonus);
+}
 
 void
 dmg (struct character *character, char *line)
@@ -51,6 +76,48 @@ void
 quit (struct character *character, char *line)
 {
 	exit (EXIT_SUCCESS);
+}
+
+void
+strength (struct character *character, char *line)
+{
+	printf ("Strength: %d\n", character->strength);
+	bonus (character->strength);
+}
+
+void
+dexterity (struct character *character, char *line)
+{
+	printf ("Dexterity: %d\n", character->dexterity);
+	bonus (character->dexterity);
+}
+
+void
+constitution (struct character *character, char *line)
+{
+	printf ("Constitution: %d\n", character->constitution);
+	bonus (character->constitution);
+}
+
+void
+intelligence (struct character *character, char *line)
+{
+	printf ("Intelligence: %d\n", character->intelligence);
+	bonus (character->intelligence);
+}
+
+void
+wisdom (struct character *character, char *line)
+{
+	printf ("Wisdom: %d\n", character->wisdom);
+	bonus (character->wisdom);
+}
+
+void
+charisma (struct character *character, char *line)
+{
+	printf ("Charisma: %d\n", character->charisma);
+	bonus (character->charisma);
 }
 
 
