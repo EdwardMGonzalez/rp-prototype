@@ -3,15 +3,27 @@
  */
 #include "character-command.h"
 
+void dmg (struct character *character, char *line);
+void heal (struct character *character, char *line);
+void hp (struct character *character, char *line);
+void maxhp (struct character *character, char *line);
+void quit (struct character *character, char *line);
 
-#define NUMCOMMANDS  17
+void strength (struct character *character, char *line);
+void dexterity (struct character *character, char *line);
+void constitution (struct character *character, char *line);
+void intelligence (struct character *character, char *line);
+void wisdom (struct character *character, char *line);
+void charisma (struct character *character, char *line);
 
+#define NUMCOMMANDS  18
 namedCommand	COMMANDS[NUMCOMMANDS] = {
 	{"dmg", dmg},
 	{"heal", heal},
 	{"hp", hp},
 	{"maxhp", maxhp},
 	{"quit", quit},
+	{"q", quit},
 	{"strength", strength},
 	{"str", strength},
         {"dexterity", dexterity},
@@ -25,6 +37,8 @@ namedCommand	COMMANDS[NUMCOMMANDS] = {
         {"charaisma", charisma},
         {"cha", charisma}
 };
+
+
 
 void
 bonus (int score)
