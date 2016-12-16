@@ -21,7 +21,7 @@ main.o: main.c
 read-character-sheet.o: read-character-sheet.c character.h
 	$(CC) $(CFLAGS) -c read-character-sheet.c
 
-character-command.o: character-command.c character.h
+character-command.o: character-command.c character.h character-command.h
 	$(CC) $(CFLAGS) -c character-command.c
 
 test: load-character characters/vaughn-dacey-walker.md

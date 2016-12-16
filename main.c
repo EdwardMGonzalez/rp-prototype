@@ -1,4 +1,5 @@
-#include "character.h"
+
+#include "character-command.h"
 
 void		enterLoop (struct character *character);
 

@@ -1,27 +1,23 @@
 /*
  * Defines commands and utils for character inspection and manipulation
  */
-#include "character.h"
+#include "character-command.h"
 
 
-void
-printHp (struct character *character, char *line)
-{
-	printf ("HP: %d\n", character->hp);
-}
+#define NUMCOMMANDS  5
 
-void
-printMaxHp (struct character *character, char *line)
-{
-	printf ("MaxHP: %d\n", character->maxhp);
-}
-
+namedCommand	COMMANDS[NUMCOMMANDS] = {
+	{"dmg", dmg},
+	{"heal", heal},
+	{"hp", hp},
+	{"maxhp", maxhp},
+	{"quit", quit}
+};
 
 void
-takeDmg (struct character *character, char *line)
+dmg (struct character *character, char *line)
 {
 	int		reduction = getIntValue ("dmg", line);
-
 	character->hp = character->hp - reduction;
 	if (character->hp < 0)
 		character->hp = 0;
@@ -32,13 +28,32 @@ void
 heal (struct character *character, char *line)
 {
 	int		increase = getIntValue ("heal", line);
-
 	/* update hp value as long as we're not over max */
 	character->hp = character->hp + increase;
 	if (character->hp > character->maxhp)
 		character->hp = character->maxhp;
 	printf ("HP: %d\n", character->hp);
 }
+
+void
+hp (struct character *character, char *line)
+{
+	printf ("HP: %d\n", character->hp);
+}
+
+void
+maxhp (struct character *character, char *line)
+{
+	printf ("MaxHP: %d\n", character->maxhp);
+}
+
+void
+quit (struct character *character, char *line)
+{
+	exit (EXIT_SUCCESS);
+}
+
+
 /* what we do when we don't understand the input */
 void
 defaultCommand (struct character *character, char *line)
@@ -57,15 +72,13 @@ defaultCommand (struct character *character, char *line)
 characterCommand
 commandFactory (char *line)
 {
-	if (0 == strncmp ("hp", line, 2))
-		return &printHp;
-	if (0 == strncmp ("maxhp", line, 2))
-		return &printMaxHp;
-	else if (0 == strncmp ("dmg", line, 3))
-		return &takeDmg;
-	else if (0 == strncmp ("heal", line, 4))
-		return &heal;
-	else if (0 == strncmp ("exit", line, 4))
-		exit (EXIT_SUCCESS);
+	int		i = NUMCOMMANDS;
+	while (i--) {
+		namedCommand	cmd = COMMANDS[i];
+		if (0 == strncmp (cmd.name, line, strlen (cmd.name))) {
+			return cmd.command;
+		}
+	}
+
 	return &defaultCommand;
 }
